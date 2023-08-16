@@ -1,0 +1,62 @@
+---
+
+  - name: Install and Configure SNMP
+    hosts: debian
+    remote_user: admin
+    become: yes
+    become_user: root
+    vars:
+      snmp_ro: "change_me"
+      sl1_dc: "change_me"
+      sl1_mc: "change_me"
+    tasks:
+
+      - name: Update apt repo and cache
+        apt: 
+          update_cache: yes 
+          upgrade: dist
+          autoremove: yes
+          force_apt_get: yes 
+          cache_valid_time: 3600
+
+      - name: Ensure snmp is installed
+        apt:
+          name: 
+            - snmpd
+          state: present
+          update_cache: true
+
+      - name: Add our unconfigured snmpd.conf 
+        ansible.builtin.copy:
+          src: /opt/ansible/default_files/sample_snmpd.conf
+          dest: /etc/snmp/snmpd.conf
+          owner: root
+          group: root
+          mode: '0600'
+
+      - name: Replace default snnm RO string with variable from playbook
+        ansible.builtin.replace:
+          path: /etc/snmp/snmpd.conf
+          regexp: 'snmp_ro'
+          replace: '{{ snmp_ro }}'
+
+      - name: Replace our placeholder Data Collector junk
+        ansible.builtin.replace:
+          path: /etc/snmp/snmpd.conf
+          regexp: 'SL1_DC'
+          replace: '{{ sl1_dc }}'
+
+      - name: Replace our placeholder Message Collector junk 
+        ansible.builtin.replace:
+          path: /etc/snmp/snmpd.conf
+          regexp: 'SL1_MC'
+          replace: '{{ sl1_mc }}'
+
+      - name: Reload and restart snmpd
+        ansible.builtin.systemd:
+          name: snmpd
+          enabled: yes
+          daemon_reload: yes
+          state: restarted
+
+

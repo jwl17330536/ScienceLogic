@@ -1,0 +1,61 @@
+---
+  - name: Discover device in ScienceLogic SL1
+    hosts: ubuntu
+    remote_user: ubuntu
+    become: yes
+    become_user: root
+    vars:
+      sl1_username: "change_me"
+      sl1_password: "change_me"
+      sl1_url: "https://change_me/api/discovery_session_active"
+    tasks:
+
+      - name: Update apt repo and cache
+        apt: 
+          update_cache: yes 
+          upgrade: dist
+          autoremove: yes
+          force_apt_get: yes 
+          cache_valid_time: 3600
+
+      - name: Ensure net-tools is installed
+        apt:
+          name: 
+            - net-tools
+          state: present
+          update_cache: true
+      
+      - name: Copy ssh discovery session json
+        ansible.builtin.copy:
+          src: /opt/ansible/default_files/sl1_discovery_template_ssh.json
+          dest: /tmp/sl1_discovery_ssh.json
+          owner: root
+          group: root
+          mode: '0700'
+
+      - name: Get the IPv4 IP address
+        shell: ifconfig $(route | grep default | awk '{print $(NF)}') | grep 'inet' | awk '{ print $2}' | head -1
+        register: ipv4_address
+
+    - name: Modify the sl1_discovery_ssh.json file
+      replace:
+        dest=/tmp/sl1_discovery_ssh.json
+        regexp='MY_ADDRESS'
+        replace='{{ ipv4_address.stdout }}'
+        backup=no
+
+      - name: Discover via SSH
+        uri:
+          validate_certs: no
+          force_basic_auth: yes
+          user: '{{ sl1_username }}'
+          password: '{{ sl1_password }}'
+          url: '{{ sl1_url }}'
+          method: POST
+          src: /tmp/sl1_discovery_ssh.json
+          remote_src: yes
+          headers:
+            Content-Type: application/json
+            Accept: application/json
+          status_code: 201
+

@@ -1,0 +1,49 @@
+---
+
+  - name: Install and Configure rsyslog
+    hosts: amazon_linux
+    remote_user: ec2-user
+    become: yes
+    become_user: root
+    vars:
+      sl1_mc: "change_me"
+    tasks:
+
+      - name: Install the latest version of rsyslog
+        ansible.builtin.yum:
+          name: rsyslog
+          state: latest
+
+      - name: Add our rsyslog.conf line
+        ansible.builtin.lineinfile:
+          path: /etc/rsyslog.conf
+          owner: root
+          group: root
+          mode: '0600'
+          line: '*.*  action(type="omfwd" target="{{ sl1_mc }}" port="514" protocol="udp"'
+          insertafter: EOF
+
+      - name: Add our rsyslog.conf line
+        ansible.builtin.lineinfile:
+          path: /etc/rsyslog.conf
+          owner: root
+          group: root
+          mode: '0600'
+          line: '            action.resumeRetryCount="100"'
+          insertafter: EOF
+
+      - name: Add our rsyslog.conf line
+        ansible.builtin.lineinfile:
+          path: /etc/rsyslog.conf
+          owner: root
+          group: root
+          mode: '0600'
+          line: '            queue.type="linkedList" queue.size="10000")'
+          insertafter: EOF
+
+      - name: Reload and restart rsyslog
+        ansible.builtin.systemd:
+          name: rsyslog
+          enabled: yes
+          daemon_reload: yes
+          state: restarted

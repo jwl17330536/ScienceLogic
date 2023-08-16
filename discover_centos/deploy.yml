@@ -1,0 +1,11 @@
+---
+
+  - name: Install and configure snmp - Centos
+    import_playbook: snmp_centos_configure.yml
+
+  - name: Install and configure rsyslog - Centos
+    import_playbook: rsyslog_centos_configure.yml
+
+  - name: Discover in SL1 via SNMP - Centos
+    import_playbook: discover_centos_snmp.yml
+

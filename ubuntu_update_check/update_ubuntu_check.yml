@@ -1,0 +1,38 @@
+---
+
+  - name: Install and Configure our Update Check Script
+    hosts: ubuntu
+    remote_user: ubuntu
+    become: yes
+    become_user: root
+    tasks:
+
+      - name: Update apt repo and cache
+        apt: 
+          update_cache: yes 
+          upgrade: dist
+          autoremove: yes
+          force_apt_get: yes 
+          cache_valid_time: 3600
+
+      - name: Ensure cron is installed
+        apt:
+          name: 
+            - cron
+          state: present
+          update_cache: true
+
+      - name: Ensure that apt_update_check.sh script exists
+        ansible.builtin.copy:
+          src: /opt/ansible/default_files/apt_update_check.sh
+          dest: /opt/apt_update_check.sh
+          owner: root
+          group: root
+          mode: '0700'
+
+      - name: Ensure a job for apt_update_check.sh exists in cron
+        ansible.builtin.cron:
+          name: "apt_update_check.sh"
+          minute: "45"
+          hour: "11,23"
+          job: "/opt/apt_update_check.sh -n check"

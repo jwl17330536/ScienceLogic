@@ -1,0 +1,13 @@
+---
+
+  - name: Install and configure snmp - Amazon
+    import_playbook: snmp_amazon_configure.yml
+
+  - name: Install and configure rsyslog - Amazon
+    import_playbook: rsyslog_amazon_configure.yml
+
+  - name: Discover in SL1 via SNMP - Amazon
+    import_playbook: discover_amazon_snmp.yml
+
+
+

@@ -1,0 +1,10 @@
+---
+
+  - name: Install and configure snmp - Ubuntu
+    import_playbook: snmp_ubuntu_configure.yml
+
+  - name: Install and configure rsyslog - Ubuntu
+    import_playbook: rsyslog_ubuntu_configure.yml
+
+  - name: Discover in SL1 via SNMP - Ubuntu
+    import_playbook: discover_ubuntu_snmp.yml

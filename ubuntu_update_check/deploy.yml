@@ -1,0 +1,5 @@
+---
+
+  - name: Create an automated update check for SL1 - Ubuntu
+    import_playbook: update_ubuntu_check.yml
+

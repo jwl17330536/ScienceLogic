@@ -1,0 +1,40 @@
+{
+   "log_all" : "0",
+   "organization" : "/api/organization/0",
+   "model_override" : "0",
+   "model_device" : "1",
+   "credentials" : [
+      "/api/credential/snmp/change_me"
+   ],
+   "edited_by" : "/api/account/change_me",
+   "max_interface_inventory_count" : "10000",
+   "aligned_device_template" : null,
+   "bypass_interface_inventory" : "0",
+   "device_groups" : [],
+   "port_scan_timeout" : null,
+   "ip_lists" : [
+      {
+         "start_ip" : "MY_ADDRESS",
+         "end_ip" : "MY_ADDRESS"
+      }
+   ],
+   "scan_all_ips" : null,
+   "discover_non_snmp" : "0",
+   "hostnames" : [],
+   "pre_device_ttl" : "2",
+   "scan_throttle" : null,
+   "interface_inventory_timeout" : "600000",
+   "name" : "ansible_created_MY_ADDRESS",
+   "scan_ports" : [
+      "21",
+      "22",
+      "25",
+      "80",
+      "136"
+   ],
+   "duplicate_protection" : "1",
+   "description" : "",
+   "dhcp_enabled" : "0",
+   "aligned_collector" : "/api/appliance/change_me",
+   "initial_scan_level" : null
+}

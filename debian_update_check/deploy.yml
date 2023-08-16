@@ -1,0 +1,4 @@
+---
+
+  - name: Create an automated update check for SL1 - Debian
+    import_playbook: update_debian_check.yml

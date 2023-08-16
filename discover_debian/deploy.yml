@@ -1,0 +1,10 @@
+---
+
+  - name: Install and configure snmp - Debian
+    import_playbook: snmp_debian_configure.yml
+
+  - name: Install and configure rsyslog - Debian
+    import_playbook: rsyslog_debian_configure.yml
+
+  - name: Discover in SL1 via SNMP - Debian
+    import_playbook: discover_debian_snmp.yml
