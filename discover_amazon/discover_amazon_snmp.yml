@@ -32,7 +32,7 @@
           dest=/tmp/sl1_discovery_snmp.json
           regexp='MY_ADDRESS'
           replace='{{ ipv4_address.stdout }}'
-          backup= no
+          backup='no'
 
       - name: Discover via SNMP
         uri:
